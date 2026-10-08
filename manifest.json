@@ -4,7 +4,7 @@
   "id": "piphi-network-huawei-solar",
   "name": "Huawei Solar",
   "version": "0.1.0",
-  "description": "Monitor Huawei solar inverters and meters through negotiated Modbus registers.",
+  "description": "Read active power and daily generated energy from supported Huawei SUN2000 inverters over local Modbus TCP.",
   "metadata": {
     "generator": "piphi-network-create",
     "scaffold_version": "0.3.0",
@@ -74,8 +74,8 @@
     "editable_fields": [
       "host",
       "alias",
-      "bridge_address",
-      "protocol"
+      "unit_id",
+      "poll_interval_seconds"
     ],
     "runtime_fields": [
       "id",
@@ -97,6 +97,8 @@
       "kind": "sensor",
       "unit": "bool"
     },
+    "active_power_w": {"kind": "sensor", "unit": "W", "value_kind": "numeric"},
+    "daily_yield_kwh": {"kind": "sensor", "unit": "kWh", "value_kind": "numeric"},
     "refresh": {
       "kind": "action"
     }
@@ -104,7 +106,7 @@
   "commands": {
     "refresh": {
       "description": "Refresh the device state.",
-      "timeout_ms": 5000
+      "timeout_ms": 15000
     }
   },
   "entities": [
@@ -115,6 +117,8 @@
       "entity_type": "solar_system",
       "capabilities": [
         "connected",
+        "active_power_w",
+        "daily_yield_kwh",
         "refresh"
       ],
       "available_commands": [
@@ -134,10 +138,15 @@
       }
     }
   ],
+  "ui": {
+    "experience_packages": [
+      {"registry_id": "io.piphi.huawei-solar-production", "version_range": ">=0.1,<1", "auto_install": true}
+    ]
+  },
   "marketplace": {
     "metadata_version": 2,
     "display_name": "Huawei Solar",
-    "summary": "Monitor Huawei solar inverters and meters through negotiated Modbus registers.",
+    "summary": "Read active power and daily generated energy from supported Huawei SUN2000 inverters over local Modbus TCP.",
     "category": "energy",
     "regions": [
       "WW"
@@ -151,24 +160,19 @@
       "support_url": "https://github.com/PiPhi-io/piphi-network-huawei-solar/issues",
       "security_contact": "support@piphi.io"
     },
+    "access_declared": true,
     "access": [
       {
         "id": "local_network",
         "label": "Local network access",
         "reason": "Discovers or communicates with supported services and devices on the homeowner's local network.",
         "required": true
-      },
-      {
-        "id": "credentials",
-        "label": "Account or device credentials",
-        "reason": "Authenticates only to the configured vendor account, service, or local device and keeps credentials out of state and diagnostics.",
-        "required": true
       }
     ],
     "compatibility": [
       {
         "brand": "Huawei",
-        "model": "SUN2000 and compatible Modbus-capable energy equipment"
+        "model": "SUN2000 models exposing Modbus V3 registers 32080 and 32114"
       }
     ],
     "documentation_url": "https://github.com/PiPhi-io/piphi-network-huawei-solar",
@@ -184,18 +188,11 @@
         "status": "unverified"
       }
     },
-    "device_types": [
-      "solar inverter",
-      "power meter",
-      "battery system"
-    ],
+    "device_types": ["solar inverter"],
     "protocols": [
       "Modbus TCP"
     ],
-    "discovery_methods": [
-      "manual",
-      "local network discovery"
-    ],
+    "discovery_methods": ["manual"],
     "connectivity": "local",
     "offline_support": "full"
   }

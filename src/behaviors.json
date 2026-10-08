@@ -125,6 +125,8 @@
       "entityType": "solar_system",
       "capabilities": [
         "connected",
+        "active_power_w",
+        "daily_yield_kwh",
         "refresh"
       ],
       "targeting": {
