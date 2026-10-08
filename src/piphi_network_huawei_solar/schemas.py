@@ -10,3 +10,4 @@ class DeviceConfig(RuntimeConfig):
     base_url: str | None = None
     poll_interval_seconds: int | None = None
     service_name: str | None = None
+    unit_id: int | None = None

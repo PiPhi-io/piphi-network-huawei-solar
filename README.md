@@ -1,6 +1,15 @@
 # Piphi Network Huawei Solar
 
-Generated PiPhi integration runtime.
+This runtime currently supports a narrow, read-only SUN2000 Modbus TCP view:
+inverter active power (register 32080, signed I32 W) and daily generated
+electricity (register 32114, unsigned U32 / 100 kWh). These addresses and
+types come from Huawei's Solar Inverter Modbus Interface Definitions V3.0.
+Only models exposing both registers are supported by this slice. Configure a
+local `host` (optionally `:port`) and `unit_id` (default 1). The runtime never
+assumes that configured means connected; unsuccessful reads report unavailable.
+Modbus TCP is unencrypted, so use a trusted local network. The bundled
+declarative widget shows only those two values and offers details/history, not
+write controls.
 
 ## Run locally
 
@@ -34,7 +43,9 @@ The runtime listens on port `4213` by default and exposes the common PiPhi runti
 `capability-catalog.json` inventories inverter, PV string, meter, grid,
 battery, optimizer, elevated control, and Modbus transport capabilities. Each
 entry is implemented, planned, or excluded, and tests prevent planned register
-features from leaking into the advertised runtime contract.
+features from leaking into the advertised runtime contract. Active inverter
+power and daily generated energy are implemented; meter, battery, optimizer,
+control, and model-specific diagnostics remain planned.
 
 Capabilities will be negotiated by inverter model, firmware, unit ID,
 installed subdevices, transport, and write permission. Raw register access and

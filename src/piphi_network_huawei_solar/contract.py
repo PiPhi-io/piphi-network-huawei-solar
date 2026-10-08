@@ -23,6 +23,8 @@ CAPABILITIES: dict[str, dict[str, Any]] = {
         "kind": "sensor",
         "unit": "bool"
     },
+    "active_power_w": {"kind": "sensor", "unit": "W", "value_kind": "numeric"},
+    "daily_yield_kwh": {"kind": "sensor", "unit": "kWh", "value_kind": "numeric"},
     "refresh": {
         "kind": "action"
     }
@@ -31,13 +33,13 @@ CAPABILITIES: dict[str, dict[str, Any]] = {
 COMMANDS: dict[str, dict[str, Any]] = {
     "refresh": {
         "description": "Refresh the device state.",
-        "timeout_ms": 5000
+        "timeout_ms": 15000
     }
 }
 
 CONFIG_SCHEMA: dict[str, Any] = {
     "schema": {
-        "title": "Piphi Network Huawei Solar Setup",
+        "title": "Huawei SUN2000 Modbus TCP",
         "type": "object",
         "required": [
             "host"
@@ -51,14 +53,8 @@ CONFIG_SCHEMA: dict[str, Any] = {
                 "type": "string",
                 "title": "Alias"
             },
-            "bridge_address": {
-                "type": "string",
-                "title": "Bridge Address"
-            },
-            "protocol": {
-                "type": "string",
-                "title": "Protocol"
-            }
+            "unit_id": {"type": "integer", "title": "Modbus unit ID", "minimum": 0, "maximum": 247},
+            "poll_interval_seconds": {"type": "integer", "title": "Poll interval (seconds)", "minimum": 60}
         }
     },
     "uiSchema": {
@@ -66,14 +62,10 @@ CONFIG_SCHEMA: dict[str, Any] = {
             "placeholder": "192.168.1.50"
         },
         "alias": {
-            "placeholder": "Office Device"
+            "placeholder": "Solar inverter"
         },
-        "bridge_address": {
-            "placeholder": "tcp://127.0.0.1:9000"
-        },
-        "protocol": {
-            "placeholder": "mqtt"
-        }
+        "unit_id": {"placeholder": "1"},
+        "poll_interval_seconds": {"placeholder": "300"}
     }
 }
 
@@ -84,6 +76,8 @@ FALLBACK_ENTITY: dict[str, Any] = {
     "entity_type": "solar_system",
     "capabilities": [
         "connected",
+        "active_power_w",
+        "daily_yield_kwh",
         "refresh"
     ],
     "available_commands": [
