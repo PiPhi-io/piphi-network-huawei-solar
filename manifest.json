@@ -195,5 +195,8 @@
     "discovery_methods": ["manual"],
     "connectivity": "local",
     "offline_support": "full"
+  },
+  "onboarding": {
+    "mode": "discovery"
   }
 }
